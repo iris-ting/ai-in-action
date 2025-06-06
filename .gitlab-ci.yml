@@ -1,0 +1,38 @@
+# GitLab CI/CD 設定：一個完整的 pipeline，分成兩階段
+# 1️⃣ generate-test: 使用 Vertex AI 產生測試檔案 test_generated.py（不 commit）
+# 2️⃣ run-tests: 使用 pytest 執行剛產出的測試檔，驗證原始程式碼是否正確
+
+stages:
+  - generate_test
+  - run_tests
+
+variables:
+  # 你的 GCP Cloud Function 或 Cloud Run endpoint
+  GCP_ENDPOINT: "https://your-cloud-function-url"
+
+  # 測試碼暫時輸出的路徑（不 commit 回 repo）
+  TEST_FILENAME: "tests/test_generated.py"
+
+# ❶ 產生測試檔案
+generate-test:
+  stage: generate_test
+  script:
+    # 執行你寫好的 Python 程式，從 Vertex AI 取得測試碼
+    - python3 get_diff_and_call_ai.py "${GCP_ENDPOINT}" "${TEST_FILENAME}"
+  artifacts:
+    # 把測試檔案傳給下一階段的 run-tests 使用
+    paths:
+      - tests/test_generated.py
+    expire_in: 1 hour  # 減少空間佔用
+
+# ❷ 執行測試（用剛產出的 test script）
+run-tests:
+  stage: run_tests
+  script:
+    # 安裝 pytest（可改成其他語言測試工具）
+    - pip install pytest
+    # 執行整個 tests 資料夾內的測試
+    - pytest tests/
+  needs:
+    - job: generate-test  # 明確依賴 generate-test job 並使用它的 artifacts
+      artifacts: true
