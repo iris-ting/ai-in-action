@@ -8,3 +8,5 @@ def two_sum(nums, target):
         if complement in lookup:
             return [lookup[complement], i]
         lookup[num] = i
+
+        # hello from Kai
