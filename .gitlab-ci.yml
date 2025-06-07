@@ -15,6 +15,8 @@ print_python_diff:
 generate_test_script:
   stage: testgen
   script:
+    - echo "Installing packages"
+    - pip install -r requirements.txt --quiet
     - echo "Generating test script from Vertex AI..."
     - python3 generate_test_script.py
   only:
