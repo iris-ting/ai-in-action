@@ -11,7 +11,7 @@ is_first_commit = before_sha == "0000000000000000000000000000000000000000"
 modified_files_raw = subprocess.check_output(["python3", "get_diff.py"]).decode()
 
 
-if not modified_files:
+if not modified_files_raw:
     print("No modified Python files.")
     exit(0)
 
