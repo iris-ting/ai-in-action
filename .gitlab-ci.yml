@@ -1,11 +1,22 @@
 stages:
   - diff
+  - testgen
 
 print_python_diff:
   stage: diff
   script:
     - echo "🔍 Getting modified Python files..."
     - python3 get_diff.py
+  only:
+    - merge_requests
+    - branches
+  image: python:3.10
+
+generate_test_script:
+  stage: testgen
+  script:
+    - echo "Generating test script from Vertex AI..."
+    - python3 generate_test_script.py
   only:
     - merge_requests
     - branches
