@@ -15,8 +15,7 @@ print_python_diff:
 generate_test_script:
   stage: testgen
   script:
-    - echo ${#GCP_KEY_BASE64}
-    - echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > key.json
+    - echo "$GCP_KEY_BASE64" | base64 -d > key.json
     - export GOOGLE_APPLICATION_CREDENTIALS="$PWD/key.json"
     - echo "Installing packages"
     - pip install -r requirements.txt --quiet
