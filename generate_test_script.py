@@ -8,7 +8,7 @@ after_sha = os.environ["CI_COMMIT_SHA"]
 is_first_commit = before_sha == "0000000000000000000000000000000000000000"
 
 # ❶ 取得變動檔案
-modified_files_raw = subprocess.check_output(["python3", "get_modified_files.py"]).decode()
+modified_files_raw = subprocess.check_output(["python3", "get_diff.py"]).decode()
 modified_files = json.loads(modified_files_raw)
 
 if not modified_files:
