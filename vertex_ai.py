@@ -2,8 +2,6 @@ from google import genai
 from google.genai import types
 import base64
 
-prompt="Please write a Python unit test for an addition function that takes two integers and returns their sum. The test should include cases for positive numbers, negative numbers, and zero. Use the unittest framework."
-
 def generate(text):
   client = genai.Client(
       vertexai=True,
@@ -46,5 +44,3 @@ def generate(text):
     config = generate_content_config,
     ):
     print(chunk.text, end="")
-
-generate(prompt)
