@@ -23,6 +23,7 @@ generate_test_script:
     - python3 generate_test_script.py
     - git config user.name "iris-ting"
     - git config user.email "yunchien0820@gmail.com"
+    - git checkout -b "$CI_COMMIT_REF_NAME"
     - git add tests/*.py
     - git commit -m "add generated test cases"
     - git push origin "$CI_COMMIT_REF_NAME"
