@@ -12,6 +12,8 @@ def get_diff_files():
     if not modified_files:
         print("No modified Python files.")
         exit(0)
+        return []
+    return modified_files
 
 def read_file(filepath):
     with open(filepath, "r") as f:
