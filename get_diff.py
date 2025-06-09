@@ -7,20 +7,26 @@ before_sha = os.environ.get("CI_COMMIT_BEFORE_SHA", "")
 after_sha = os.environ["CI_COMMIT_SHA"]
 is_first_commit = before_sha == "0000000000000000000000000000000000000000"
 
+excluded_files = {"generate_test_script.py", "get_diff.py", "vertex_ai.py"}
+excluded_dirs = {"tests"}
+
+def is_excluded(filepath):
+    basename = os.path.basename(filepath)
+    return (
+        basename in excluded_files
+        or any(filepath.startswith(f"{d}/") for d in excluded_dirs)
+    )
+
 modified_files = []
 
 if is_first_commit:
     all_files = subprocess.check_output(["find", ".", "-type", "f", "-name", "*.py"]).decode().splitlines()
-    modified_files = all_files
+    modified_files = [f for f in all_files if not is_excluded(f)]
 else:
     diff_files = subprocess.check_output([
         "git", "diff", "--name-only", before_sha, after_sha
     ]).decode().splitlines()
-    modified_files = [f for f in diff_files if f.endswith(".py")]
+    modified_files = [f for f in diff_files if f.endswith(".py") and not is_excluded(f)]
 
 # 輸出 JSON 字串給後續使用（並排除不需測試的檔案）
-excluded_files = {"generate_test_script.py", "get_diff.py", "vertex_ai.py"}
-
-filtered = [f for f in modified_files if os.path.basename(f) not in excluded_files]
-
-print(json.dumps(filtered))
+print(json.dumps(modified_files))
