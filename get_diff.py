@@ -20,5 +20,9 @@ else:
     ]).decode().splitlines()
     modified_files = [f for f in diff_files if f.endswith(".py")]
 
-# 輸出 JSON 字串給後續使用
-print(json.dumps(modified_files))
+# 輸出 JSON 字串給後續使用（並排除不需測試的檔案）
+excluded_files = {"generate_test_script.py", "get_diff.py", "vertex_ai.py"}
+
+filtered = [f for f in modified_files if os.path.basename(f) not in excluded_files]
+
+print(json.dumps(filtered))

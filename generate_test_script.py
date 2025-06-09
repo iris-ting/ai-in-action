@@ -9,6 +9,7 @@ is_first_commit = before_sha == "0000000000000000000000000000000000000000"
 
 # ❶ 取得變動檔案
 modified_files_raw = subprocess.check_output(["python3", "get_diff.py"]).decode()
+print(f"🪵 Raw output from get_diff.py: '{modified_files_raw}'")
 modified_files = json.loads(modified_files_raw)
 
 if not modified_files:
