@@ -1,5 +1,5 @@
-# LeetCode Two Sum 解法：給定一個整數陣列 nums 和一個目標值 target，
-# 請你回傳兩個數字的 index，其總和等於 target。
+# LeetCode Two Sum: Given an integer array nums and an integer target,
+# return the indices of the two numbers such that they add up to target.
 
 def two_sum(nums, target):
     lookup = {}
@@ -8,5 +8,3 @@ def two_sum(nums, target):
         if complement in lookup:
             return [lookup[complement], i]
         lookup[num] = i
-
-        # hello from Kai
