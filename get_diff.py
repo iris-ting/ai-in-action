@@ -10,11 +10,9 @@ is_first_commit = before_sha == "0000000000000000000000000000000000000000"
 modified_files = []
 
 if is_first_commit:
-    print("🔧 First commit detected. Listing all .py files.")
     all_files = subprocess.check_output(["find", ".", "-type", "f", "-name", "*.py"]).decode().splitlines()
     modified_files = all_files
 else:
-    print("🔍 Diff-based commit detected.")
     diff_files = subprocess.check_output([
         "git", "diff", "--name-only", before_sha, after_sha
     ]).decode().splitlines()
