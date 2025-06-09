@@ -3,6 +3,8 @@ from google.genai import types
 import base64
 
 def generate(text):
+  result = ""
+
   client = genai.Client(
       vertexai=True,
       project="iristest-462021",
@@ -43,4 +45,5 @@ def generate(text):
     contents = contents,
     config = generate_content_config,
     ):
-    print(chunk.text, end="")
+      result += chunk.text
+  return result
