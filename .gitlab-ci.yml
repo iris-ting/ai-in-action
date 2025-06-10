@@ -21,12 +21,12 @@ generate_test_script:
     - pip install -r requirements.txt --quiet
     - echo "Generating test script from Vertex AI..."
     - python3 generate_test_script.py
-    - git config user.name "iris-ting"
-    - git config user.email "yunchien0820@gmail.com"
-    - git checkout -b "$CI_COMMIT_REF_NAME"
-    - git add tests/*.py
-    - git commit -m "add generated test cases"
-    - git push origin "$CI_COMMIT_REF_NAME"
+    # - git config user.name "iris-ting"
+    # - git config user.email "yunchien0820@gmail.com"
+    # - git checkout -b "$CI_COMMIT_REF_NAME"
+    # - git add tests/*.py
+    # - git commit -m "add generated test cases"
+    # - git push origin "$CI_COMMIT_REF_NAME"
   only:
     - merge_requests
     - branches
