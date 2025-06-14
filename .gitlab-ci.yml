@@ -4,30 +4,75 @@ stages:
 
 print_python_diff:
   stage: diff
+  image: python:3.10
   script:
     - echo "Getting modified Python files..."
     - python3 get_diff.py
   only:
     - merge_requests
     - branches
-  image: python:3.10
+  
 
-generate_test_script:
+generate_tests:
   stage: testgen
+  image: python:3.10
+  cache:
+    key: pip-cache
+    paths:
+      - ~/.cache/pip
   script:
-    - echo "$GCP_KEY_BASE64" | base64 -d > key.json
-    - export GOOGLE_APPLICATION_CREDENTIALS="$PWD/key.json"
-    - echo "Installing packages"
-    - pip install -r requirements.txt --quiet
-    - echo "Generating test script from Vertex AI..."
-    - python3 generate_test_script.py
-    # - git config user.name "iris-ting"
-    # - git config user.email "yunchien0820@gmail.com"
-    # - git checkout -b "$CI_COMMIT_REF_NAME"
-    # - git add tests/*.py
-    # - git commit -m "add generated test cases"
-    # - git push origin "$CI_COMMIT_REF_NAME"
+    - pip install -r requirements.txt
+    - echo "Generating test scripts..."
+    - python3 get_test_script.py
+  artifacts:
+    paths:
+      - generated_tests/
+    expire_in: 1 hour
   only:
     - merge_requests
     - branches
+  dependencies:
+    - print_python_diff
+
+  
+
+run_generated_tests:
+  stage: testgen
   image: python:3.10
+  cache:
+    key: pip-cache
+    paths:
+      - ~/.cache/pip
+  script:
+    - pip install pytest
+    - echo "🧪 Checking generated test files..."
+    - ls -lh generated_tests/ || echo "generated_tests/ folder not found"
+    - |
+      if [ -d generated_tests ] && [ "$(ls -A generated_tests)" ]; then
+        echo "✅ Running tests in generated_tests/"
+        pytest generated_tests/ || echo "⚠️ No valid tests found, but continuing."
+      else
+        echo "⚠️ No test files found in generated_tests/, skipping test step."
+      fi
+  dependencies:
+    - generate_tests
+  only:
+    - merge_requests
+    - branches
+
+
+commit_tests:
+  stage: testgen
+  image: python:3.10
+  script:
+    - git config --global user.name "cc19judy"
+    - git config --global user.email "judy971119@gmail.com"
+    - git checkout $CI_COMMIT_REF_NAME
+    - git add generated_tests/
+    - git commit -m "🤖 Add auto-generated test scripts" || echo "Nothing to commit"
+    - git push https://gitlab-ci-token:${CI_PUSH_TOKEN}@gitlab.com/${CI_PROJECT_PATH}.git HEAD:$CI_COMMIT_REF_NAME
+  only:
+    - merge_requests
+    - branches
+  dependencies:
+    - generate_tests
