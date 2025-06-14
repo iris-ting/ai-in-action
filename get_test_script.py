@@ -1,12 +1,11 @@
 import requests
-from bs4 import BeautifulSoup
 import subprocess
 import os
 import json
 import sys
 
 
-API_URL = "https://gen-testscript.uc.r.appspot.com/"
+API_URL = "http://127.0.0.1:5000/api/gen_test"
 
 
 # --helper functions------------------------------------------------------------
@@ -34,6 +33,7 @@ def get_diff_files():
             sys.exit(0)
 
         return modified_files
+
     except subprocess.CalledProcessError as e:
         print(f"Error calling get_diff.py: {e}")
         sys.exit(1)
@@ -53,38 +53,18 @@ def get_test_script(file_path):
     Returns:
         dict: {"html": str} if success, or {"error": str} if failed.
     """
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            code = f.read()
+    with open(file_path, 'r', encoding='utf-8') as f:
+        code = f.read()
 
-        data = {
-            # "prompt": "Count the words in the code and return the count.\n\n Answer format: There are xx words." + code
-            "prompt": "Provide me a test script with 2 test cases of the following code.\n\n Answer with code content only. Add the original function in it." + code
-        }
+    response = requests.post(API_URL, json={
+        "filename": file_path,
+        "code": code
+    })
 
-        headers = {
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-
-        response = requests.post(API_URL, data=data, headers=headers)
-
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.text, "html.parser")
-            pre_tag = soup.find("pre")
-
-            if pre_tag:
-                raw_code = pre_tag.text.strip()
-                clean_code = clean_code_block(raw_code)
-                return {"response": clean_code}
-
-            else:
-                return {"error": "No <pre> tag found in response HTML"}
-        else:
-            return {"error": f"API Error {response.status_code}: {response.text}"}
-        
-
-    except Exception as e:
-        return {"error": str(e)}
+    if response.status_code == 200:
+        return {"response": response.text}
+    else:
+        return {"error": f"API Error {response.status_code}: {response.text}"}
 
 
 def save_test_script(response_text, original_filename):
@@ -101,7 +81,7 @@ def save_test_script(response_text, original_filename):
     output_path = os.path.join("generated_tests", test_filename)
 
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write(response_text)
+        f.write(json.loads(response_text))
 
     print(f"Saved test file: {output_path}")
 

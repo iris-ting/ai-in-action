@@ -3,12 +3,12 @@ import os
 import sys
 import json
 
-before_sha = os.environ.get("CI_COMMIT_BEFORE_SHA", "")
-after_sha = os.environ["CI_COMMIT_SHA"]
+before_sha = os.environ.get("CI_COMMIT_BEFORE_SHA", "0000000000000000000000000000000000000000")
+after_sha = os.environ.get("CI_COMMIT_SHA", "8622b5a795a8aa5f66f5aa3c0db0ebcf17124ce0")
 is_first_commit = before_sha == "0000000000000000000000000000000000000000"
 
 excluded_files = {"generate_test_script.py", "get_test_script.py", "get_diff.py", "vertex_ai.py", "temp.py"}
-excluded_dirs = {"generated_tests"}
+excluded_dirs = {"generated_tests", "google-cloud-sdk"}
 
 # def is_excluded(filepath):
 #     basename = os.path.basename(filepath)
