@@ -87,7 +87,8 @@ def save_test_script(response_text, original_filename):
 
 
 if __name__ == "__main__":
-    files = get_diff_files()
+    # files = get_diff_files()
+    files = ["substract.py", "two_sum.py"]
 
     for file in files:
         print(f"📄 Generating test for: {file}")
