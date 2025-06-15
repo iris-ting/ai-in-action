@@ -1,5 +1,2 @@
 .DS_Store
-test_MaxProfit.py
 __pycache__/
-*.py[cod]
-temp.py
