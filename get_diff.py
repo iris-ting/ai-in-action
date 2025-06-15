@@ -7,7 +7,7 @@ before_sha = os.environ.get("CI_COMMIT_BEFORE_SHA", "")
 after_sha = os.environ["CI_COMMIT_SHA"]
 is_first_commit = before_sha == "0000000000000000000000000000000000000000"
 
-excluded_files = {"generate_test_script.py", "get_test_script.py", "get_diff.py", "vertex_ai.py", "temp.py"}
+excluded_files = {"get_test_script.py", "get_diff.py"}
 excluded_dirs = {"generated_tests"}
 
 def is_excluded(filepath):
@@ -25,7 +25,7 @@ if is_first_commit:
     modified_files = [f for f in all_files if not is_excluded(f)]
 else:
     diff_files = subprocess.check_output([
-        "git", "diff", "--name-only", before_sha, after_sha
+        "git", "diff",  "--diff-filter=AM", "--name-only", before_sha, after_sha
     ]).decode().splitlines()
     modified_files = [f for f in diff_files if f.endswith(".py") and not is_excluded(f)]
 
