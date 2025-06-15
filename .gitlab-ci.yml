@@ -5,7 +5,7 @@ stages:
 variables:
   GIT_USER_NAME: "TJI-KAI"
   GIT_USER_EMAIL: "tjicmu2025@gmail.com"
-  TARGET_BRANCH: "judy"
+  TARGET_BRANCH: "main"
   TARGET_REPO: "https://oauth2:${CI_PUSH_TOKEN}@gitlab.com/iris-ting/ai-in-action.git"
   TARGET_REPO_NAME: "ai-in-action"
 
