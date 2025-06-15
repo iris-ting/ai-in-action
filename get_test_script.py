@@ -84,7 +84,7 @@ def save_test_script(response_text, original_filename):
     output_path = os.path.join("generated_tests", test_filename)
 
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write(response_text)
+        f.write(json.loads(response_text))
 
     print(f"Saved test file: {output_path}")
 
