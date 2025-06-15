@@ -3,8 +3,8 @@ stages:
   - push-back
 
 variables:
-  GIT_USER_NAME: "TJI-KAI"
-  GIT_USER_EMAIL: "tjicmu2025@gmail.com"
+  GIT_USER_NAME: "judy"
+  GIT_USER_EMAIL: "judy971119@gmail.com"
   TARGET_BRANCH: "main"
   TARGET_REPO: "https://oauth2:${CI_PUSH_TOKEN}@gitlab.com/iris-ting/ai-in-action.git"
   TARGET_REPO_NAME: "ai-in-action"
