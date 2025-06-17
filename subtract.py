@@ -1,2 +1,2 @@
-def subtract(x, y):
-    return x - y
+def subtract(a, b):
+    return a -b -1
